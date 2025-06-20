@@ -1,0 +1,104 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2312                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    // Substrate（基板全体）: 左右両方をカバー
+    {
+        name    substrateCellSet;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        box     (-0.06 0 -0.02) (0.06 0.00999 0.02); // x方向に広く
+    }
+    {
+        name    substrate;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     substrateCellSet;
+    }
+
+    // Heater: Substrate の上に乗る薄い層
+    {
+        name    heaterCellSet;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        box     (-0.01 0.00999 -0.01) (0.01 0.011 0.01); // yをsubstrateの上に
+    }
+    {
+        name    heater;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     heaterCellSet;
+    }
+
+    // bottomWater
+    {
+        name    bottomWaterCellSet;
+        type    cellSet;
+        action  new;
+        source  boxToCell;
+        box     (-100 -100 -100) (100 0 100); // 基板の下に水
+    }
+    {
+        name    bottomWater;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     bottomWaterCellSet;
+    }
+
+    // topAir: 他の全領域以外
+    {
+        name    topAirCellSet;
+        type    cellSet;
+        action  new;
+        source  cellToCell;
+        set     substrateCellSet;
+    }
+    {
+        name    topAirCellSet;
+        type    cellSet;
+        action  add;
+        source  cellToCell;
+        set     heaterCellSet;
+    }
+    {
+        name    topAirCellSet;
+        type    cellSet;
+        action  add;
+        source  cellToCell;
+        set     bottomWaterCellSet;
+    }
+    {
+        name    topAirCellSet;
+        type    cellSet;
+        action  invert;
+    }
+    {
+        name    topAir;
+        type    cellZoneSet;
+        action  new;
+        source  setToCellZone;
+        set     topAirCellSet;
+    }
+);
+
+
+// ************************************************************************* //
