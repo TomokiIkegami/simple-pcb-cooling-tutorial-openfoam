@@ -14,3 +14,7 @@
 
   > **Note:**  
   > A 14-core parallel run is used in this case. You can change the number of cores by editing the `system/decomposeParDict` script.
+
+# Example results
+  ![Simulation overview](https://github.com/TomokiIkegami/simple-pcb-cooling-tutorial-openfoam/blob/main/images/pcb_cooling_simulation_result_example.gif)
+  ![Results](https://github.com/TomokiIkegami/simple-pcb-cooling-tutorial-openfoam/blob/main/images/pcb_cooling_simulation_result_example.gif)
